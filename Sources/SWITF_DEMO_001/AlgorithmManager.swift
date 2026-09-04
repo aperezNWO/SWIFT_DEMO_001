@@ -13,8 +13,14 @@ public struct AlgorithmManager {
         var seedY = currentTimeMillis &* 2
         
         let sampleSize = max(sampleSizeRaw, 1)
-        let vertexX = fisherYates(count: sampleSize, seed: &seedX)
-        let vertexY = fisherYates(count: sampleSize, seed: &seedY)
+        let limit = max(vertexSize, 1)
+        
+        var vertexX: [Int] = []
+        var vertexY: [Int] = []
+        for _ in 0..<sampleSize {
+            vertexX.append(nextRandomInt(seed: &seedX, bound: limit))
+            vertexY.append(nextRandomInt(seed: &seedY, bound: limit))
+        }
         
         return vertexX + vertexY
     }
@@ -25,19 +31,27 @@ public struct AlgorithmManager {
         var seedY = currentTimeMillis &* 2
         
         let sampleSize = max(sampleSizeRaw, 1)
-        let vertexX = fisherYates(count: sampleSize, seed: &seedX)
-        let vertexY = fisherYates(count: sampleSize, seed: &seedY)
+        let gridLimit = max(vertexSize, 1)
+        
+        var vertexX: [Int] = []
+        var vertexY: [Int] = []
+        for _ in 0..<sampleSize {
+            vertexX.append(nextRandomInt(seed: &seedX, bound: gridLimit))
+            vertexY.append(nextRandomInt(seed: &seedY, bound: gridLimit))
+        }
         
         let pairs = zip(vertexX, vertexY).map { "[\($0),\($1)]" }.joined(separator: "|")
         
-        let gridLimit = max(vertexSize, 1)
-        let gridRows = (0..<gridLimit).map { row in
-            let rowVals = (0..<gridLimit).map { col in 
-                let index = row * gridLimit + col
-                let val = index % 5 == 0 ? vertexX[safe: index] ?? 0 : 0
-                return String(val)
+        // Map all generated points directly onto the grid matrix by their coordinates
+        var grid = Array(repeating: Array(repeating: 0, count: gridLimit), count: gridLimit)
+        for (index, (x, y)) in zip(vertexX, vertexY).enumerated() {
+            if x >= 0 && x < gridLimit && y >= 0 && y < gridLimit {
+                grid[y][x] = index + 1
             }
-            return "{\(rowVals.joined(separator: ","))}"
+        }
+        
+        let gridRows = grid.map { rowVals in
+            "{\(rowVals.map(String.init).joined(separator: ","))}"
         }.joined(separator: "|")
         
         let correctedLogLines = zip(vertexX, vertexY).enumerated().map { index, point -> String in
