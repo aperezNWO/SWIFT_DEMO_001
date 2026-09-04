@@ -137,12 +137,14 @@ curl "http://127.0.0.1:8080/GenerateRandomVertex_SpringBoot"
 // DOCKER
 ///////////////////////////////////////////////////////////////////////
 
+# docker build
+docker build -t swiftdemo001:latest .
+
 # 1. Log in to your container registry using your access token
 
 https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens/create
 
 echo "YOUR_DOCKER_HUB_ACCESS_TOKEN" | docker login -u apereznwogmail --password-stdin
-
 
 docker tag swiftdemo001:latest apereznwogmail/swiftdemo001:latest
 
@@ -154,6 +156,7 @@ docker push apereznwogmail/swiftdemo001:latest
 
 docker.io/apereznwogmail/swiftdemo001:latest
 
+https://swiftdemo001-latest.onrender.com/
 
 ///////////////////////////////////////////////////////////////////////
 // TESTING - remote
