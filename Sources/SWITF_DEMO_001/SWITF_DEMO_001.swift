@@ -1,15 +1,19 @@
 import Vapor
 
 @main
-struct App {
+struct SWITF_DEMO_001 {
     static func main() async throws {
         var env = try Environment.detect()
         try LoggingSystem.bootstrap(from: &env)
 
-        let app = Application(env)
-        defer { app.shutdown() }
+        let app = try await Application.make(env)
+        defer {
+            Task {
+                try await app.asyncShutdown()
+            }
+        }
 
-        try routes(app)
+        try await configure(app)
 
         try await app.execute()
     }

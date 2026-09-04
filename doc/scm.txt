@@ -102,9 +102,35 @@ swift package purge-cache
 swift package update 
 swift build -v
 swift run -c release --verbose
+swift run
+
+///////////////////////////////////////////////////////////////////////
+// TESTING
+///////////////////////////////////////////////////////////////////////
+
+curl http://127.0.0.1:8080/hello
+
+curl http://127.0.0.1:8080/ping 
+
+curl "http://127.0.0.1:8080/api/fractals/generate?kind=1&xMin=-2.0&xMax=1.0&yMin=-1.5&yMax=1.5"
+
+curl "http://127.0.0.1:8080/GenerateRandomVertex_SpringBoot"
 
 ///////////////////////////////////////////////////////////////////////
 // DOCKER
 ///////////////////////////////////////////////////////////////////////
+
+# 1. Build the Docker image from your project root
+docker build -t swiftdemo001:latest .
+
+# 2. Log in to your container registry using an access token or API key
+https://github.com/settings/personal-access-tokens/new
+echo "YOUR_REGISTRY_PASSWORD_OR_TOKEN" | docker login ghcr.io -u YOUR_USERNAME --password-stdin
+
+# 3. Tag your local image with the remote registry repository target
+docker tag swiftdemo001:latest ghcr.io/YOUR_USERNAME/swiftdemo001:latest
+
+# 4. Push the tagged image to the remote registry
+docker push ghcr.io/YOUR_USERNAME/swiftdemo001:latest
 
 ///////////////////////////////////////////////////////////////////////

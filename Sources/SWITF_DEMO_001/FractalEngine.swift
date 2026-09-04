@@ -1,4 +1,5 @@
 import Foundation
+import Vapor
 
 public enum FractalKind: Int, Codable, CaseIterable {
     case mandelbrot = 1
@@ -10,22 +11,37 @@ public enum FractalKind: Int, Codable, CaseIterable {
     }
 }
 
-public struct FractalPoint: Codable {
+public struct FractalPoint: Content {
     public let x: Double
     public let y: Double
     public let intensity: Int
+
+    public init(x: Double, y: Double, intensity: Int) {
+        self.x = x
+        self.y = y
+        self.intensity = intensity
+    }
 }
 
-public struct Bounds: Codable {
+public struct Bounds: Content {
     public let xMin: Double
     public let xMax: Double
     public let yMin: Double
     public let yMax: Double
+
+    public init(xMin: Double, xMax: Double, yMin: Double, yMax: Double) {
+        self.xMin = xMin
+        self.xMax = xMax
+        self.yMin = yMin
+        self.yMax = yMax
+    }
 }
 
 public class FractalEngine {
     public static let canvasWidth = 800
     public static let canvasHeight = 600
+
+    public init() {}
 
     public func getFractal(kind: FractalKind, bounds: Bounds, maxIterations: Int) -> [FractalPoint] {
         switch kind {
