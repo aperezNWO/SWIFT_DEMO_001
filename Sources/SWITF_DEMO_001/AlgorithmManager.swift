@@ -38,13 +38,15 @@ public struct AlgorithmManager {
             return "{\(rowVals.joined(separator: ","))}"
         }.joined(separator: "|")
         
-        let logLines = zip(vertexX, vertexY).enumerated().prefix(9).map { index, point -> String in
+        // Fix: Use sampleSize instead of fixed .prefix(9) so all requested points are displayed
+        let logLines = zip(vertexX, vertexY).enumerated().prefix(sampleSize).map { index, point -> String in
             let paddedIdx = String(format: "%02d", index)
             if index == 0 {
                 return "\(paddedIdx)<[\(point.0);\(point.1)]>-00-"
             } else {
                 let weight = (point.0 + point.1) * 3 % 25
-                return "\(paddedIdx)<[\(point.0);\(point.1)]>-\(weight)-[0;\(index % 8)]≡[\(index % 8);\(index % 5)]≡"
+                let modVal = max(1, sampleSize - 1)
+                return "\(paddedIdx)<[\(point.0);\(point.1)]>-\(weight)-[0;\(index % modVal)]≡[\(index % modVal);\(index % 5)]≡"
             }
         }
         
