@@ -1,0 +1,54 @@
+///////////////////////////////////////////////////////////////////////
+//                           SCM                                     //
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+//  GIT SETUP
+///////////////////////////////////////////////////////////////////////
+
+echo "# SWIFT_DEMO_001" >> README.md
+git init
+git add *
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/aperezNWO/SWIFT_DEMO_001.git
+git push -u origin main
+
+///////////////////////////////////////////////////////////////////////
+//  DEV ENV SETUP
+///////////////////////////////////////////////////////////////////////
+
+-- [_] https://www.swift.org/install/windows/
+
+## POWERSHELL TROUBLESHOOTING
+
+Repair-WinGetPackageManager
+
+Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+
+## POWER SHELL INSTALL WINGET 
+
+Install-Module -Name Microsoft.WinGet.Client -Force
+
+## POWER SHELL INSTALL REQUIREMENTS 
+
+# OPT 1
+winget install --id Microsoft.VisualStudio.2022.Community --exact
+
+# OPT 3
+winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add 
+
+# X OPT 2
+winget install --id Microsoft.VisualStudio.2022.Community --exact --override "--add Microsoft.VisualStudio.Workload.NativeDesktop --passive --norestart"
+
+     Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add 
+
+     Microsoft.VisualStudio.Component.VC.Tools.ARM64" --source winget
+
+## POWER SHELL INSTALL SWIFT DEV ENV
+
+    winget install --id Swift.Toolchain -e --source winget
+
+///////////////////////////////////////////////////////////////////////
+
+
