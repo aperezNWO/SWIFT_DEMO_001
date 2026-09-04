@@ -60,6 +60,9 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel
 ///////////////////////////////////////////////////////////////////////
 
 swift package init --type executable
+swift package clean
+swift package purge-cache
+swift package update 
 swift build -v
 swift run
 
