@@ -56,15 +56,16 @@ winget install --id Microsoft.VisualStudio.2022.Community --exact --override "--
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1
 
 ///////////////////////////////////////////////////////////////////////
-// SWIFT 
+// SWIFT -- GIT HUB CODESPACES
 ///////////////////////////////////////////////////////////////////////
+
 
 swift package init --type executable
 swift package clean
 swift package purge-cache
 swift package update 
 swift build -v
-swift run
+swift run -c release --verbose
 
 ///////////////////////////////////////////////////////////////////////
 // DOCKER
