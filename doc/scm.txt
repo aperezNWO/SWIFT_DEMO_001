@@ -1,0 +1,174 @@
+///////////////////////////////////////////////////////////////////////
+//                           SCM                                     //
+///////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+//  GIT SETUP
+///////////////////////////////////////////////////////////////////////
+
+echo "# SWIFT_DEMO_001" >> README.md
+git init
+git add *
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/aperezNWO/SWIFT_DEMO_001.git
+git push -u origin main
+git pull
+
+
+///////////////////////////////////////////////////////////////////////
+//  DEV ENV SETUP -- WINDOWS
+///////////////////////////////////////////////////////////////////////
+
+-- [_] https://www.swift.org/install/windows/
+
+## POWERSHELL TROUBLESHOOTING
+
+Repair-WinGetPackageManager
+
+Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+
+## POWER SHELL INSTALL WINGET 
+
+Install-Module -Name Microsoft.WinGet.Client -Force
+
+## POWER SHELL INSTALL REQUIREMENTS 
+
+# OPT 1
+winget install --id Microsoft.VisualStudio.2022.Community --exact
+
+# OPT 3
+winget install --id Microsoft.VisualStudio.2022.Community --exact --force --custom "--add 
+
+# X OPT 2
+winget install --id Microsoft.VisualStudio.2022.Community --exact --override "--add Microsoft.VisualStudio.Workload.NativeDesktop --passive --norestart"
+
+     Microsoft.VisualStudio.Component.Windows11SDK.22621 --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add 
+
+     Microsoft.VisualStudio.Component.VC.Tools.ARM64" --source winget
+
+## POWER SHELL INSTALL SWIFT DEV ENV
+
+    winget install --id Swift.Toolchain -e --source winget
+
+## POWERSHELL ADMIN MODE
+
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1
+
+///////////////////////////////////////////////////////////////////////
+// DEV ENV SETUP -- CODESPACES - UBUNTU
+///////////////////////////////////////////////////////////////////////
+
+df -h /
+
+sudo apt-get update && sudo apt-get install -y \
+    binutils \
+    git \
+    gnupg2 \
+    libc6-dev \
+    libcurl4-openssl-dev \
+    libedit2 \
+    libgcc-11-dev \
+    libpython3-dev \
+    libsqlite3-0 \
+    libstdc++-11-dev \
+    libxml2-dev \
+    libz3-dev \
+    pkg-config \
+    tzdata \
+    unzip \
+    zlib1g-dev
+
+wget https://download.swift.org/swift-6.3.3-release/ubuntu2204/swift-6.3.3-RELEASE/swift-6.3.3-RELEASE-ubuntu22.04.tar.gz
+tar xzf swift-6.3.3-RELEASE-ubuntu22.04.tar.gz
+sudo mv swift-6.3.3-RELEASE-ubuntu22.04 /usr/local/swift
+echo "export PATH=/usr/local/swift/usr/bin:\$PATH" >> ~/.bashrc
+source ~/.bashrc
+
+///////////////////////////////////////////////////////////////////////
+// save disk space 
+///////////////////////////////////////////////////////////////////////
+
+docker system prune -a --volumes -f
+docker builder prune -a --force
+sudo journalctl --vacuum-time=1s
+sudo rm -rf /tmp/*
+sudo apt-get clean
+rm -rf .build/
+rm -rf ~/.swiftpm/cache
+sudo lsof +L1
+rm -rf /vscode/serverCache/* /vscode/extensionsCache/* ~/.vscode-remote/data/CachedData/*
+
+sudo find /var/log -type f -exec truncate -s 0 {} \;
+rm -rf ~/.cache/pip ~/.npm ~/.cargo ~/.rustup ~/.cache/go-build ~/.local/share/containers
+
+sudo systemctl stop docker
+sudo rm -rf /var/lib/docker/buildkit/* /var/lib/docker/tmp/* /var/lib/docker/image/*
+sudo systemctl start docker
+
+df -h /
+
+///////////////////////////////////////////////////////////////////////
+// SWIFT -- GIT HUB CODESPACES
+///////////////////////////////////////////////////////////////////////
+
+
+swift package init --type executable
+swift package clean
+swift package purge-cache
+swift package update 
+swift build -v
+swift run -c release --verbose
+swift run
+
+///////////////////////////////////////////////////////////////////////
+// TESTING
+///////////////////////////////////////////////////////////////////////
+
+curl http://127.0.0.1:8080/hello
+
+curl http://127.0.0.1:8080/ping 
+
+curl "http://127.0.0.1:8080/api/fractals/generate?kind=1&xMin=-2.0&xMax=1.0&yMin=-1.5&yMax=1.5"
+
+curl "http://127.0.0.1:8080/GenerateRandomVertex_SpringBoot"
+
+///////////////////////////////////////////////////////////////////////
+// DOCKER
+///////////////////////////////////////////////////////////////////////
+
+# docker build
+docker build -t swiftdemo001:latest .
+
+# 1. Log in to your container registry using your access token
+
+https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens/create
+
+echo "YOUR_DOCKER_HUB_ACCESS_TOKEN" | docker login -u apereznwogmail --password-stdin
+
+docker tag swiftdemo001:latest apereznwogmail/swiftdemo001:latest
+
+docker push apereznwogmail/swiftdemo001:latest
+
+///////////////////////////////////////////////////////////////////////
+// render
+///////////////////////////////////////////////////////////////////////
+
+docker.io/apereznwogmail/swiftdemo001:latest
+
+https://swiftdemo001-latest.onrender.com/
+
+///////////////////////////////////////////////////////////////////////
+// TESTING - remote
+///////////////////////////////////////////////////////////////////////
+
+https://swiftdemo001-latest.onrender.com/hello
+
+https://swiftdemo001-latest.onrender.com/ping 
+
+https://swiftdemo001-latest.onrender.com/GenerateRandomVertex_SpringBoot
+
+https://swiftdemo001-latest.onrender.com/api/fractals/generate?kind=1&xMin=-2.0&xMax=1.0&yMin=-1.5&yMax=1.5
+
+
+///////////////////////////////////////////////////////////////////////
