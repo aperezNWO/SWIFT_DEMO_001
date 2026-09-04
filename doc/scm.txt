@@ -117,6 +117,9 @@ swift package init --type executable
 swift package clean
 swift package purge-cache
 swift package update 
+
+swiftc -typecheck Sources/SWITF_DEMO_001/AlgorithmManager.swift
+
 swift build -v
 swift run -c release --verbose
 swift run
