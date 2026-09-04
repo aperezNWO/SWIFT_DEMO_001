@@ -106,7 +106,6 @@ sudo systemctl stop docker
 sudo rm -rf /var/lib/docker/buildkit/* /var/lib/docker/tmp/* /var/lib/docker/image/*
 sudo systemctl start docker
 
-
 df -h /
 
 ///////////////////////////////////////////////////////////////////////

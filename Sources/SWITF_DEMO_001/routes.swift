@@ -7,6 +7,10 @@ func routes(_ app: Application) throws {
         "It works!"
     }
 
+    app.get("ping") { req async -> Response in
+        return Response(status: .noContent)
+    }
+
     app.get("hello") { req async -> String in
         "Hello, world!"
     }
