@@ -1,0 +1,15 @@
+{
+  "name": "Swift Vapor",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/swift:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "sswg.swift-lang"
+      ]
+    }
+  },
+  "postCreateCommand": "swift package resolve"
+}
