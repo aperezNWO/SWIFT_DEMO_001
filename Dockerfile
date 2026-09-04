@@ -1,35 +1,47 @@
-# ==============================================================================
-# Build Stage
-# ==============================================================================
-FROM swift:6.3.3-jammy AS build
+# ================================
+# Build image
+# ================================
+FROM swift:6.3.3-jammy as build
 
-WORKDIR /app
+WORKDIR /build
 
-# Copy dependency manifest files first for layer caching
-COPY Package.swift Package.resolved ./
+# Install build dependencies if needed
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy package files
+COPY Package.swift Package.resolved* ./
 RUN swift package resolve
 
-# Copy the rest of the source code
+# Copy source code
 COPY . .
 
-# Build the release executable
+# Build release executable
 RUN swift build -c release --static-swift-stdlib
 
-# ==============================================================================
-# Run Stage
-# ==============================================================================
-FROM ubuntu:22.04
+# ================================
+# Production image
+# ================================
+FROM ubuntu:24.04
 
-RUN apt-get update && apt-get install -y \
-    libatomic1 \
+# Install runtime dependencies required by Vapor and Swift
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && apt-get install -y \
     ca-certificates \
+    libssl3 \
+    zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy built binary from the build stage
-COPY --from=build /app/.build/release/SWIFT_DEMO_001 /app/app
+# Copy built binary and assets from build stage
+COPY --from=build /build/.build/release/SWITF_DEMO_001 /app/app
+# Copy public/resources if your project uses them
+# COPY --from=build /build/Public /app/Public
 
-# Expose port and set entrypoint
 EXPOSE 8080
-ENTRYPOINT ["./app", "serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
+
+ENTRYPOINT ["./app"]
+CMD ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
