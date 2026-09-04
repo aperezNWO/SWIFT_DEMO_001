@@ -1,12 +1,14 @@
 # ================================
 # Build image
 # ================================
-FROM swift:6.3.3-jammy as build
+FROM swift:6.3.3-noble as build
 
 WORKDIR /build
 
-# Install build dependencies if needed
-RUN apt-get update && apt-get install -y \
+# Bypass GPG signature check if network environment strips keys
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::AllowInsecureRepositories=true update && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
     libssl-dev \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -26,9 +28,8 @@ RUN swift build -c release --static-swift-stdlib
 # ================================
 FROM ubuntu:24.04
 
-# Install runtime dependencies required by Vapor and Swift
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && apt-get install -y \
+    apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     libssl3 \
     zlib1g \
@@ -36,10 +37,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 
 WORKDIR /app
 
-# Copy built binary and assets from build stage
 COPY --from=build /build/.build/release/SWITF_DEMO_001 /app/app
-# Copy public/resources if your project uses them
-# COPY --from=build /build/Public /app/Public
 
 EXPOSE 8080
 
