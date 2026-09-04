@@ -3,50 +3,35 @@ import Vapor
 func routes(_ app: Application) throws {
     let fractalEngine = FractalEngine()
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PING
-    // ─────────────────────────────────────────────────────────────────────────
-    app.get("ping") { req async -> HTTPStatus in
-        return .noContent
+    app.get { req async in
+        "It works!"
     }
 
-   // ─────────────────────────────────────────────────────────────────────────
-    // FRACTALS
-    // ─────────────────────────────────────────────────────────────────────────
+    app.get("hello") { req async -> String in
+        "Hello, world!"
+    }
+
     app.get("api", "fractals", "generate") { req async throws -> [FractalPoint] in
         let kindParam = try req.query.get(Int.self, at: "kind")
-        let xMin = req.query[Double.self, at: "xMin"]
-        let xMax = req.query[Double.self, at: "xMax"]
-        let yMin = req.query[Double.self, at: "yMin"]
-        let yMax = req.query[Double.self, at: "yMax"]
-        let maxIterations = req.query[Int.self, at: "maxIterations"]
-
         guard let fractalKind = FractalKind(fromValue: kindParam) else {
-            throw Abort(.badRequest, reason: "Tipo de fractal inválido: \(kindParam)")
+            throw Abort(.badRequest, reason: "Invalid or missing 'kind' parameter.")
         }
+        
+        let xMin = try req.query.get(Double.self, at: "xMin")
+        let xMax = try req.query.get(Double.self, at: "xMax")
+        let yMin = try req.query.get(Double.self, at: "yMin")
+        let yMax = try req.query.get(Double.self, at: "yMax")
+        let maxIterations = try req.query.get(Int?.self, at: "maxIterations")
 
-        let defaultBounds = fractalKind == .mandelbrot
-            ? Bounds(xMin: -2.0, xMax: 1.0, yMin: -1.2, yMax: 1.2)
-            : Bounds(xMin: -1.5, xMax: 1.5, yMin: -1.5, yMax: 1.5)
-
-        let bounds: Bounds
-        if let xMin = xMin, let xMax = xMax, let yMin = yMin, let yMax = yMax {
-            bounds = Bounds(xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax)
-        } else {
-            bounds = defaultBounds
-        }
-
+        let bounds = Bounds(xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax)
         let iterations = maxIterations ?? 500
         return fractalEngine.getFractal(kind: fractalKind, bounds: bounds, maxIterations: iterations)
     }
-    
-    // ─────────────────────────────────────────────────────────────────────────
-    // DIJKSTRA
-    // ─────────────────────────────────────────────────────────────────────────
-    app.get("GenerateRandomVertex_SpringBoot") { req async -> String in
-        let vertexSize = 9
+
+    app.get("GenerateRandomVertex_SpringBoot") { req async throws -> String in
+        let vertexSize = 10
         let sampleSize = 23
         let sourcePoint = 0
-        return AlgorithmManager.generateRandomPoints(vertexSize: vertexSize, sampleSizeRaw: sampleSize, sourcePoint: sourcePoint)
+        return AlgorithmManager.generateFormattedPoints(vertexSize: vertexSize, sampleSizeRaw: sampleSize, sourcePoint: sourcePoint)
     }
 }

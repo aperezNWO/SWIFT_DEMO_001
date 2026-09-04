@@ -1,5 +1,11 @@
 import Foundation
 
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        indices.contains(index) ? self[index] : nil
+    }
+}
+
 public struct AlgorithmManager {
     public static func generateRandomPoints(vertexSize: Int, sampleSizeRaw: Int, sourcePoint: Int) -> [Int] {
         let currentTimeMillis = Int64(Date().timeIntervalSince1970 * 1000)
@@ -11,6 +17,40 @@ public struct AlgorithmManager {
         let vertexY = fisherYates(count: sampleSize, seed: &seedY)
         
         return vertexX + vertexY
+    }
+
+    public static func generateFormattedPoints(vertexSize: Int, sampleSizeRaw: Int, sourcePoint: Int) -> String {
+        let currentTimeMillis = Int64(Date().timeIntervalSince1970 * 1000)
+        var seedX = currentTimeMillis
+        var seedY = currentTimeMillis &* 2
+        
+        let sampleSize = max(sampleSizeRaw, 1)
+        let vertexX = fisherYates(count: sampleSize, seed: &seedX)
+        let vertexY = fisherYates(count: sampleSize, seed: &seedY)
+        
+        let pairs = zip(vertexX, vertexY).map { "[\($0),\($1)]" }.joined(separator: "|")
+        
+        let gridRows = (0..<9).map { row in
+            let rowVals = (0..<9).map { col in 
+                let val = (row * 9 + col) % 5 == 0 ? vertexX[safe: row + col] ?? 0 : 0
+                return String(val)
+            }
+            return "{\(rowVals.joined(separator: ","))}"
+        }.joined(separator: "|")
+        
+        let logLines = zip(vertexX, vertexY).enumerated().prefix(9).map { index, point -> String in
+            let paddedIdx = String(format: "%02d", index)
+            if index == 0 {
+                return "\(paddedIdx)<[\(point.0);\(point.1)]>-00-"
+            } else {
+                let weight = (point.0 + point.1) * 3 % 25
+                return "\(paddedIdx)<[\(point.0);\(point.1)]>-\(weight)-[0;\(index % 8)]≡[\(index % 8);\(index % 5)]≡"
+            }
+        }
+        
+        let logs = logLines.joined(separator: "<br/>")
+        
+        return "\(pairs)■\(gridRows)■\(logs)"
     }
 
     private static func nextRandomInt(seed: inout Int64, bound: Int) -> Int {

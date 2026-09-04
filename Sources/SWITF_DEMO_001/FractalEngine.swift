@@ -37,7 +37,7 @@ public struct Bounds: Content {
     }
 }
 
-public class FractalEngine {
+public struct FractalEngine: Sendable {
     public static let canvasWidth = 800
     public static let canvasHeight = 600
 
