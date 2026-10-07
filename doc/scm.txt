@@ -160,6 +160,7 @@ curl "http://127.0.0.1:8080/health"
 ///////////////////////////////////////////////////////////////////////
 
 # docker build
+# export DOCKER_BUILDKIT=1
 docker build -t swiftdemo001:latest .
 
 # 1. Log in to your container registry using your access token

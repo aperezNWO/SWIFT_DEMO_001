@@ -2,20 +2,20 @@
 # Build image
 # ================================
 FROM swift:6.3.3-noble AS build
-
 WORKDIR /build
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    libssl-dev \
-    zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
+# Copy dependency manifests first to leverage Docker layer caching
 COPY Package.swift Package.resolved* ./
 RUN swift package resolve
 
+# Copy the rest of the source code
 COPY . .
-RUN swift build -c release --static-swift-stdlib
+
+# Use BuildKit cache mounts to retain compiled objects between builds
+RUN --mount=type=cache,target=/build/.build \
+    --mount=type=cache,target=/root/.swiftpm \
+    swift build -c release --static-swift-stdlib && \
+    cp .build/release/SWITF_DEMO_001 /tmp/app
 
 # ================================
 # Production image
@@ -30,11 +30,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-# Copy the statically-linked binary from the build stage
-COPY --from=build /build/.build/release/SWITF_DEMO_001 /app/app
+COPY --from=build /tmp/app /app/app
 
 EXPOSE 8080
-
 ENTRYPOINT ["./app"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
