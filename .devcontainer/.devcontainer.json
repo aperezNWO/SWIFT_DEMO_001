@@ -1,0 +1,13 @@
+{
+  "name": "Swift Development",
+  "image": "swift:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "swiftlang.swift-vscode"
+      ]
+    }
+  },
+  "postCreateCommand": "swift build",
+  "remoteUser": "root"
+}

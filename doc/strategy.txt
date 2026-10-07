@@ -1,0 +1,20 @@
+SWIFT_DEMO_001/
+├── .vscode/
+│   ├── launch.json
+│   └── tasks.json
+├── doc/
+│   ├── scm.txt
+│   └── strategy.txt
+├── Sources/
+│   └── SWIFT_DEMO_001/
+│       ├── AlgorithmManager.swift
+│       ├── FractalEngine.swift
+│       └── Entity.swift
+│       └── SWIFT_DEMO_001.swift
+├── Tests/
+│   └── SWIFT_DEMO_001Tests/
+│       └── SWIFT_DEMO_001Tests.swift
+├── .gitignore
+├──  Package.swift
+└── README.md
+

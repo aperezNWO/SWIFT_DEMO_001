@@ -1,0 +1,20 @@
+.DS_Store
+# Ignore everything inside .build, but allow debug
+.build/
+*.tar.gz
+# /.build
+/Packages
+xcuserdata/
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+
+# Vapor specific exclusions
+Images/
+Public/Sorted/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.env
+Logs/
